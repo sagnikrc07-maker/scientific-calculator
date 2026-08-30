@@ -1,0 +1,25 @@
+{
+  "name": "omnicalc-pro-suite",
+  "version": "1.0.0",
+  "description": "A modern, high-precision Scientific Calculator, 9-category Unit Converter, Body Mass Index (BMI) meter, and Age & Life Statistics Suite.",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve . -p 3000",
+    "start": "serve . -p 3000",
+    "build": "echo 'Static build ready for Vercel'"
+  },
+  "keywords": [
+    "scientific-calculator",
+    "unit-converter",
+    "bmi-calculator",
+    "age-calculator",
+    "vercel",
+    "javascript",
+    "pwa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "OmniCalc Pro Suite",
+  "short_name": "OmniCalc",
+  "description": "Scientific Calculator, Unit Converters, BMI, and Age Calculator Suite",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f1115",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "64x64 128x128 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

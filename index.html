@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OmniCalc Pro - Scientific Calculator & Multi-Tool Suite</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="A modern, high-precision Scientific Calculator, 9-category Unit Converter, Body Mass Index (BMI) meter, and Age & Life Statistics Suite built with HTML5, CSS3, and JavaScript." />
+  <meta name="keywords" content="scientific calculator, unit converter, bmi calculator, age calculator, online tools, dark mode calculator" />
+  <meta name="theme-color" content="#4f46e5" />
+
+  <!-- Favicon & PWA Manifest -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- OpenGraph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="OmniCalc Pro - Scientific Calculator & Multi-Tool Suite" />
+  <meta property="og:description" content="A modern, high-precision Scientific Calculator, 9-category Unit Converter, Body Mass Index (BMI) meter, and Age & Life Statistics Suite." />
+  <meta property="og:image" content="favicon.svg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="OmniCalc Pro - Scientific Calculator & Multi-Tool Suite" />
+  <meta name="twitter:description" content="A modern, high-precision Scientific Calculator, 9-category Unit Converter, Body Mass Index (BMI) meter, and Age & Life Statistics Suite." />
+  <meta name="twitter:image" content="favicon.svg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Mobile Drawer Backdrop -->
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <span class="material-symbols-outlined" style="font-size: 24px;">calculate</span>
+        </div>
+        <div>
+          <h1 class="brand-title">OmniCalc Pro</h1>
+          <p class="brand-subtitle">Precision Multi-Tool Suite</p>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li>
+          <button class="nav-item-btn active" data-tab="calc-panel" id="nav-calc">
+            <span class="material-symbols-outlined nav-icon">calculate</span>
+            <span>Scientific Calculator</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-tab="converter-panel" id="nav-converter">
+            <span class="material-symbols-outlined nav-icon">swap_horiz</span>
+            <span>Unit Converters</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-tab="bmi-panel" id="nav-bmi">
+            <span class="material-symbols-outlined nav-icon">monitor_weight</span>
+            <span>BMI Calculator</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-tab="age-panel" id="nav-age">
+            <span class="material-symbols-outlined nav-icon">event</span>
+            <span>Age Calculator</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <button class="nav-item-btn" id="sidebar-theme-toggle">
+          <span class="material-symbols-outlined nav-icon" id="sidebar-theme-icon">dark_mode</span>
+          <span id="sidebar-theme-text">Dark Mode</span>
+        </button>
+        <button class="nav-item-btn" id="sidebar-shortcuts-btn">
+          <span class="material-symbols-outlined nav-icon">keyboard</span>
+          <span>Key Shortcuts</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      
+      <!-- Top App Bar -->
+      <header class="top-bar">
+        <div class="top-bar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <h2 class="current-tool-title" id="current-tool-title">Scientific Calculator</h2>
+        </div>
+
+        <div class="top-bar-actions">
+          <button class="theme-toggle-btn" id="top-theme-toggle" title="Toggle Theme (Light/Dark)">
+            <span class="material-symbols-outlined" style="font-size: 18px;" id="top-theme-icon">dark_mode</span>
+            <span id="top-theme-label">Dark</span>
+          </button>
+          <button class="icon-btn" id="help-modal-btn" title="Help & Information">
+            <span class="material-symbols-outlined" style="font-size: 20px;">help_outline</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Canvas -->
+      <main class="content-canvas">
+        
+        <!-- ========================================================
+             1. SCIENTIFIC CALCULATOR PANEL
+             ======================================================== -->
+        <section class="tool-panel active" id="calc-panel">
+          <div class="calc-layout">
+            
+            <!-- Main Calculator Card -->
+            <div class="glass-card calc-main-card">
+              
+              <!-- Screen Display -->
+              <div class="calc-screen">
+                <div class="calc-screen-top">
+                  <div class="calc-mode-badges">
+                    <button class="calc-badge active" id="deg-rad-btn" title="Toggle Angle Mode">DEG</button>
+                    <button class="calc-badge" id="inv-mode-badge" title="Inverse Functions (2nd)">2ND</button>
+                    <span class="calc-memory-indicator" id="calc-mem-flag">M</span>
+                  </div>
+                  <button class="icon-btn" id="calc-copy-btn" title="Copy result to clipboard" style="width: 28px; height: 28px; border: none; background: transparent;">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">content_copy</span>
+                  </button>
+                </div>
+
+                <div class="calc-screen-expression" id="calc-expression-display" placeholder=""></div>
+                <div class="calc-screen-live-preview" id="calc-live-preview"></div>
+                <div class="calc-screen-result" id="calc-result-display">0</div>
+              </div>
+
+              <!-- Button Grid -->
+              <div class="calc-grid">
+                <!-- Memory Row -->
+                <button class="calc-btn calc-btn-mem" onclick="calcApp.memoryClear()" title="Memory Clear">MC</button>
+                <button class="calc-btn calc-btn-mem" onclick="calcApp.memoryRecall()" title="Memory Recall">MR</button>
+                <button class="calc-btn calc-btn-mem" onclick="calcApp.memoryAdd()" title="Memory Add">M+</button>
+                <button class="calc-btn calc-btn-mem" onclick="calcApp.memorySubtract()" title="Memory Subtract">M-</button>
+                <button class="calc-btn calc-btn-mem" onclick="calcApp.memoryStore()" title="Memory Store">MS</button>
+
+                <!-- Scientific Functions Row 1 -->
+                <button class="calc-btn calc-btn-sci" id="btn-2nd" onclick="calcApp.toggle2nd()" title="Toggle Inverse / Secondary Functions">2nd</button>
+                <button class="calc-btn calc-btn-sci" id="btn-sin" onclick="calcApp.insertTrig('sin')" title="Sine">sin</button>
+                <button class="calc-btn calc-btn-sci" id="btn-cos" onclick="calcApp.insertTrig('cos')" title="Cosine">cos</button>
+                <button class="calc-btn calc-btn-sci" id="btn-tan" onclick="calcApp.insertTrig('tan')" title="Tangent">tan</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.appendConstant('π')" title="Pi constant (3.14159...)">π</button>
+
+                <!-- Scientific Functions Row 2 -->
+                <button class="calc-btn calc-btn-sci" id="btn-ln" onclick="calcApp.insertFunc('ln')" title="Natural Logarithm (base e)">ln</button>
+                <button class="calc-btn calc-btn-sci" id="btn-log" onclick="calcApp.insertFunc('log')" title="Logarithm (base 10)">log</button>
+                <button class="calc-btn calc-btn-sci" id="btn-sqrt" onclick="calcApp.insertFunc('sqrt')" title="Square Root">√</button>
+                <button class="calc-btn calc-btn-sci" id="btn-pow" onclick="calcApp.appendOperator('^')" title="Power (x^y)">x^y</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.appendConstant('e')" title="Euler's constant (2.71828...)">e</button>
+
+                <!-- Scientific Functions Row 3 -->
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.appendFactorial()" title="Factorial (n!)">n!</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.insertFunc('abs')" title="Absolute value">|x|</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.insertReciprocal()" title="Reciprocal (1/x)">1/x</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.appendSymbol('(')" title="Open Parenthesis">(</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.appendSymbol(')')" title="Close Parenthesis">)</button>
+
+                <!-- Controls & Operators Row 4 -->
+                <button class="calc-btn calc-btn-danger" onclick="calcApp.clearAll()" title="All Clear">AC</button>
+                <button class="calc-btn calc-btn-danger" onclick="calcApp.deleteLast()" title="Backspace / Delete">DEL</button>
+                <button class="calc-btn calc-btn-op" onclick="calcApp.appendPercentage()" title="Percentage">%</button>
+                <button class="calc-btn calc-btn-op" onclick="calcApp.appendOperator(' mod ')" title="Modulo">mod</button>
+                <button class="calc-btn calc-btn-op" onclick="calcApp.appendOperator(' ÷ ')" title="Divide">÷</button>
+
+                <!-- Number Pad Row 1 -->
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('7')">7</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('8')">8</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('9')">9</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.toggleSign()" title="Negate / Toggle Sign">±</button>
+                <button class="calc-btn calc-btn-op" onclick="calcApp.appendOperator(' × ')" title="Multiply">×</button>
+
+                <!-- Number Pad Row 2 -->
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('4')">4</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('5')">5</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('6')">6</button>
+                <button class="calc-btn calc-btn-sci" onclick="calcApp.appendExp()" title="Scientific E-Notation">EXP</button>
+                <button class="calc-btn calc-btn-op" onclick="calcApp.appendOperator(' − ')" title="Subtract">−</button>
+
+                <!-- Number Pad Row 3 -->
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('1')">1</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('2')">2</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('3')">3</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDecimal()">.</button>
+                <button class="calc-btn calc-btn-op" onclick="calcApp.appendOperator(' + ')" title="Add">+</button>
+
+                <!-- Number Pad Row 4 -->
+                <button class="calc-btn calc-btn-num span-2" onclick="calcApp.appendDigit('0')">0</button>
+                <button class="calc-btn calc-btn-num" onclick="calcApp.appendDigit('00')">00</button>
+                <button class="calc-btn calc-btn-equal span-2" onclick="calcApp.calculate()" title="Evaluate (=)">=</button>
+              </div>
+            </div>
+
+            <!-- History Sidebar -->
+            <div class="glass-card calc-history-card">
+              <div class="panel-header">
+                <h3 class="panel-title">
+                  <span class="material-symbols-outlined text-primary" style="font-size: 20px;">history</span>
+                  <span>Calculation Log</span>
+                </h3>
+                <button class="icon-btn" onclick="calcApp.clearHistory()" title="Clear History" style="width: 32px; height: 32px;">
+                  <span class="material-symbols-outlined" style="font-size: 16px;">delete_sweep</span>
+                </button>
+              </div>
+
+              <div class="history-list" id="calc-history-list">
+                <div class="empty-history">
+                  <span class="material-symbols-outlined" style="font-size: 36px; opacity: 0.5;">history_edu</span>
+                  <p>No calculations yet</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================================
+             2. UNIT CONVERTERS HUB PANEL
+             ======================================================== -->
+        <section class="tool-panel" id="converter-panel">
+          <!-- Category Pills -->
+          <div class="converter-categories" id="converter-category-nav">
+            <button class="cat-pill-btn active" data-category="length">
+              <span class="material-symbols-outlined" style="font-size: 18px;">straighten</span>
+              <span>Length / Distance</span>
+            </button>
+            <button class="cat-pill-btn" data-category="mass">
+              <span class="material-symbols-outlined" style="font-size: 18px;">scale</span>
+              <span>Weight / Mass</span>
+            </button>
+            <button class="cat-pill-btn" data-category="area">
+              <span class="material-symbols-outlined" style="font-size: 18px;">square_foot</span>
+              <span>Area</span>
+            </button>
+            <button class="cat-pill-btn" data-category="temperature">
+              <span class="material-symbols-outlined" style="font-size: 18px;">device_thermostat</span>
+              <span>Temperature</span>
+            </button>
+            <button class="cat-pill-btn" data-category="speed">
+              <span class="material-symbols-outlined" style="font-size: 18px;">speed</span>
+              <span>Speed</span>
+            </button>
+            <button class="cat-pill-btn" data-category="pressure">
+              <span class="material-symbols-outlined" style="font-size: 18px;">compress</span>
+              <span>Pressure</span>
+            </button>
+            <button class="cat-pill-btn" data-category="power">
+              <span class="material-symbols-outlined" style="font-size: 18px;">bolt</span>
+              <span>Power</span>
+            </button>
+            <button class="cat-pill-btn" data-category="number_system">
+              <span class="material-symbols-outlined" style="font-size: 18px;">terminal</span>
+              <span>Number Systems</span>
+            </button>
+            <button class="cat-pill-btn" data-category="currency">
+              <span class="material-symbols-outlined" style="font-size: 18px;">currency_exchange</span>
+              <span>Currency</span>
+            </button>
+          </div>
+
+          <!-- Standard Conversion Grid (for 8 categories) -->
+          <div class="converter-grid" id="standard-converter-view">
+            
+            <!-- Main Converter Card -->
+            <div class="glass-card converter-card-main">
+              <div class="panel-header">
+                <h3 class="panel-title" id="converter-current-heading">
+                  <span class="material-symbols-outlined text-primary">straighten</span>
+                  <span id="converter-heading-text">Distance / Length Converter</span>
+                </h3>
+              </div>
+
+              <!-- From & To Row -->
+              <div class="conversion-box-row">
+                <!-- From Group -->
+                <div class="unit-input-group">
+                  <label class="unit-label" for="unit-from-value">From Value</label>
+                  <input type="number" step="any" class="unit-number-input" id="unit-from-value" value="1" />
+                  
+                  <div class="unit-select-wrapper">
+                    <select class="unit-select" id="unit-from-select"></select>
+                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                  </div>
+                </div>
+
+                <!-- Swap Button -->
+                <button class="unit-swap-btn" id="unit-swap-btn" title="Swap input and output units">
+                  <span class="material-symbols-outlined" style="font-size: 22px;">swap_horiz</span>
+                </button>
+
+                <!-- To Group -->
+                <div class="unit-input-group">
+                  <label class="unit-label" for="unit-to-value">Converted Result</label>
+                  <input type="text" readonly class="unit-number-input" id="unit-to-value" style="color: var(--primary);" />
+                  
+                  <div class="unit-select-wrapper">
+                    <select class="unit-select" id="unit-to-select"></select>
+                    <span class="material-symbols-outlined select-arrow">expand_more</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Meta & Formula -->
+              <div class="conversion-meta">
+                <div id="conversion-formula-text">Formula: 1 m = 3.28084 ft</div>
+                <button class="icon-btn" id="unit-copy-btn" title="Copy result to clipboard" style="width: 32px; height: 32px;">
+                  <span class="material-symbols-outlined" style="font-size: 18px;">content_copy</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Contextual Quick Reference Card -->
+            <div class="glass-card">
+              <div class="panel-header">
+                <h3 class="panel-title" style="font-size: 1.05rem;">
+                  <span class="material-symbols-outlined text-primary" style="font-size: 20px;">bookmark_border</span>
+                  <span>Quick Benchmarks</span>
+                </h3>
+              </div>
+              <ul class="quick-ref-list" id="quick-ref-list"></ul>
+            </div>
+
+          </div>
+
+          <!-- Special Number System Converter (Base 2, 8, 10, 16) -->
+          <div class="glass-card" id="number-system-view" style="display: none;">
+            <div class="panel-header">
+              <h3 class="panel-title">
+                <span class="material-symbols-outlined text-primary">terminal</span>
+                <span>Simultaneous 4-Way Number Base Conversion</span>
+              </h3>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+              Type in any base below. The other representations, byte structures, and bit-lengths will update instantly in real-time.
+            </p>
+
+            <div class="number-system-hub">
+              <!-- Decimal -->
+              <div class="base-card">
+                <div class="base-header">
+                  <span class="base-name">Decimal</span>
+                  <span class="base-tag">Base 10</span>
+                </div>
+                <input type="text" class="base-input" id="numsys-dec" placeholder="0" value="255" />
+                <div class="bit-length-meter">
+                  <span>Digits: 0-9</span>
+                  <span id="numsys-dec-meta">Positive Integer</span>
+                </div>
+              </div>
+
+              <!-- Hexadecimal -->
+              <div class="base-card">
+                <div class="base-header">
+                  <span class="base-name">Hexadecimal</span>
+                  <span class="base-tag">Base 16 (0x)</span>
+                </div>
+                <input type="text" class="base-input" id="numsys-hex" placeholder="0" value="FF" />
+                <div class="bit-length-meter">
+                  <span>Digits: 0-9, A-F</span>
+                  <span id="numsys-hex-meta">0xFF</span>
+                </div>
+              </div>
+
+              <!-- Binary -->
+              <div class="base-card">
+                <div class="base-header">
+                  <span class="base-name">Binary</span>
+                  <span class="base-tag">Base 2 (0b)</span>
+                </div>
+                <input type="text" class="base-input" id="numsys-bin" placeholder="0" value="11111111" />
+                <div class="bit-length-meter">
+                  <span>Bits: 0, 1</span>
+                  <span id="numsys-bin-meta">8 bits (1 Byte)</span>
+                </div>
+              </div>
+
+              <!-- Octal -->
+              <div class="base-card">
+                <div class="base-header">
+                  <span class="base-name">Octal</span>
+                  <span class="base-tag">Base 8 (0o)</span>
+                </div>
+                <input type="text" class="base-input" id="numsys-oct" placeholder="0" value="377" />
+                <div class="bit-length-meter">
+                  <span>Digits: 0-7</span>
+                  <span id="numsys-oct-meta">0o377</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Special Currency Status Banner -->
+          <div class="glass-card" id="currency-extra-card" style="display: none; margin-top: 1.5rem;">
+            <div class="currency-status-bar">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="material-symbols-outlined" style="font-size: 18px; color: var(--secondary);">sync</span>
+                <span id="currency-update-time">Exchange Rates Source: Global Market Averages (USD Baseline)</span>
+              </div>
+              <button class="currency-refresh-btn" id="currency-refresh-btn">
+                <span class="material-symbols-outlined" style="font-size: 16px;">refresh</span>
+                <span>Refresh Live Rates</span>
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ========================================================
+             3. BMI (BODY MASS INDEX) CALCULATOR
+             ======================================================== -->
+        <section class="tool-panel" id="bmi-panel">
+          <div class="bmi-layout">
+            
+            <!-- Inputs Column -->
+            <div class="glass-card">
+              <div class="panel-header">
+                <h3 class="panel-title">
+                  <span class="material-symbols-outlined text-primary">straighten</span>
+                  <span>Body Parameters</span>
+                </h3>
+              </div>
+
+              <!-- Unit Mode Toggle -->
+              <div class="unit-switch-pill">
+                <button class="active" id="bmi-metric-btn">Metric (kg / cm)</button>
+                <button id="bmi-imperial-btn">Imperial (lbs / ft-in)</button>
+              </div>
+
+              <!-- Metric Form -->
+              <div id="bmi-metric-fields">
+                <div class="bmi-form-group">
+                  <label for="bmi-weight-kg">Weight</label>
+                  <div class="input-with-affix">
+                    <input type="number" id="bmi-weight-kg" step="0.1" placeholder="70" value="70" />
+                    <span class="input-affix">kg</span>
+                  </div>
+                </div>
+
+                <div class="bmi-form-group">
+                  <label for="bmi-height-cm">Height</label>
+                  <div class="input-with-affix">
+                    <input type="number" id="bmi-height-cm" step="0.5" placeholder="175" value="175" />
+                    <span class="input-affix">cm</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Imperial Form -->
+              <div id="bmi-imperial-fields" style="display: none;">
+                <div class="bmi-form-group">
+                  <label for="bmi-weight-lbs">Weight</label>
+                  <div class="input-with-affix">
+                    <input type="number" id="bmi-weight-lbs" step="0.1" placeholder="154" value="154" />
+                    <span class="input-affix">lbs</span>
+                  </div>
+                </div>
+
+                <div class="bmi-form-group">
+                  <label>Height</label>
+                  <div style="display: flex; gap: 0.75rem;">
+                    <div class="input-with-affix" style="flex: 1;">
+                      <input type="number" id="bmi-height-ft" placeholder="5" value="5" />
+                      <span class="input-affix">ft</span>
+                    </div>
+                    <div class="input-with-affix" style="flex: 1;">
+                      <input type="number" id="bmi-height-in" placeholder="9" value="9" />
+                      <span class="input-affix">in</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-primary-action" id="bmi-calc-trigger-btn" style="width: 100%; margin-top: 1rem;">
+                <span class="material-symbols-outlined">speed</span>
+                <span>Recalculate BMI</span>
+              </button>
+
+            </div>
+
+            <!-- BMI Gauge & Results Column -->
+            <div class="glass-card bmi-result-card">
+              <span style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">
+                Calculated BMI Score
+              </span>
+
+              <div class="bmi-score-number" id="bmi-score-val">22.9</div>
+
+              <div class="bmi-category-badge cat-normal" id="bmi-cat-badge">
+                <span class="material-symbols-outlined" style="font-size: 20px;" id="bmi-cat-icon">check_circle</span>
+                <span id="bmi-cat-text">Normal Weight</span>
+              </div>
+
+              <!-- Rainbow Gauge Bar -->
+              <div class="bmi-gauge-wrapper">
+                <div class="bmi-rainbow-track">
+                  <div class="bmi-pointer" id="bmi-gauge-pointer" style="left: 35%;"></div>
+                </div>
+                <div class="bmi-scale-labels">
+                  <span>Underweight (&lt;18.5)</span>
+                  <span>Normal (18.5-24.9)</span>
+                  <span>Overweight (25-29.9)</span>
+                  <span>Obese (≥30)</span>
+                </div>
+              </div>
+
+              <!-- Ideal Weight Summary Box -->
+              <div class="bmi-ideal-weight-box">
+                <div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Healthy Weight Range</div>
+                  <div style="font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700; color: var(--text-primary);" id="bmi-healthy-range-text">56.7 kg – 76.3 kg</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">BMI Prime</div>
+                  <div style="font-family: var(--font-mono); font-size: 1.15rem; font-weight: 700; color: var(--secondary);" id="bmi-prime-val">0.91</div>
+                </div>
+              </div>
+
+              <!-- Health Advisory Note -->
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 1.25rem; max-width: 520px;" id="bmi-health-insight">
+                Your BMI is within the standard healthy weight range recommended by the World Health Organization (WHO).
+              </p>
+
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ========================================================
+             4. AGE CALCULATOR & LIFE STATISTICS
+             ======================================================== -->
+        <section class="tool-panel" id="age-panel">
+          <div class="age-layout">
+            
+            <!-- Date Parameters Card -->
+            <div class="glass-card age-inputs-card">
+              <div class="panel-header">
+                <h3 class="panel-title">
+                  <span class="material-symbols-outlined text-primary">calendar_month</span>
+                  <span>Date Parameters</span>
+                </h3>
+              </div>
+
+              <div class="date-picker-group">
+                <label for="age-dob-input">Date of Birth</label>
+                <div class="date-input-wrap">
+                  <span class="material-symbols-outlined">cake</span>
+                  <input type="date" id="age-dob-input" value="2000-01-15" />
+                </div>
+              </div>
+
+              <div class="date-picker-group">
+                <label for="age-target-input">Age as of Date</label>
+                <div class="date-input-wrap">
+                  <span class="material-symbols-outlined">event_available</span>
+                  <input type="date" id="age-target-input" />
+                </div>
+              </div>
+
+              <button class="btn-primary-action" id="age-calc-btn">
+                <span class="material-symbols-outlined">calculate</span>
+                <span>Calculate Exact Age</span>
+              </button>
+
+              <!-- Zodiac Sign Card -->
+              <div class="stat-card" style="margin-top: 0.5rem;">
+                <div class="stat-icon-wrap purple" id="age-zodiac-icon-wrap">
+                  <span class="material-symbols-outlined" id="age-zodiac-icon">stars</span>
+                </div>
+                <div class="stat-meta">
+                  <span class="stat-label">Western Zodiac</span>
+                  <span class="stat-val" style="font-size: 1.05rem;" id="age-zodiac-text">Capricorn (Earth)</span>
+                </div>
+              </div>
+
+              <!-- Chinese Zodiac Card -->
+              <div class="stat-card">
+                <div class="stat-icon-wrap amber">
+                  <span class="material-symbols-outlined">pets</span>
+                </div>
+                <div class="stat-meta">
+                  <span class="stat-label">Chinese Zodiac Year</span>
+                  <span class="stat-val" style="font-size: 1.05rem;" id="age-chinese-zodiac">Dragon 🐉</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Age Results & Bento Stats Column -->
+            <div class="age-results-container">
+              
+              <!-- Main Age Hero Card -->
+              <div class="glass-card main-age-hero">
+                <span class="age-hero-label">Calculated Exact Age</span>
+
+                <div class="age-digits-row">
+                  <div class="age-digit-block">
+                    <span class="age-digit-num" id="age-res-years">26</span>
+                    <span class="age-digit-unit">Years</span>
+                  </div>
+                  <span class="age-comma">,</span>
+                  <div class="age-digit-block">
+                    <span class="age-digit-num" id="age-res-months">7</span>
+                    <span class="age-digit-unit">Months</span>
+                  </div>
+                  <span class="age-comma">,</span>
+                  <div class="age-digit-block">
+                    <span class="age-digit-num" id="age-res-days">14</span>
+                    <span class="age-digit-unit">Days</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Next Birthday Countdown Card -->
+              <div class="birthday-countdown-card">
+                <div>
+                  <div style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--primary); margin-bottom: 0.25rem;">
+                    Next Birthday Countdown
+                  </div>
+                  <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);" id="age-next-bday-date">
+                    January 15 (Friday)
+                  </div>
+                  <div style="font-size: 0.85rem; color: var(--text-muted);" id="age-next-bday-detail">
+                    Turns 27 in 139 days
+                  </div>
+                </div>
+
+                <div class="bday-circle-wrap">
+                  <svg class="bday-svg-chart" viewBox="0 0 36 36">
+                    <path class="bday-circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="bday-circle-progress" id="bday-progress-path" stroke-dasharray="62, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  </svg>
+                  <div class="bday-circle-text">
+                    <span class="bday-circle-days" id="bday-circle-days-val">139</span>
+                    <span class="bday-circle-label">Days</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Life Statistics Bento Grid -->
+              <div class="age-stats-grid">
+                <!-- Total Days -->
+                <div class="stat-card">
+                  <div class="stat-icon-wrap green">
+                    <span class="material-symbols-outlined">calendar_today</span>
+                  </div>
+                  <div class="stat-meta">
+                    <span class="stat-label">Total Days Lived</span>
+                    <span class="stat-val" id="age-total-days">9,723</span>
+                  </div>
+                </div>
+
+                <!-- Total Weeks -->
+                <div class="stat-card">
+                  <div class="stat-icon-wrap indigo">
+                    <span class="material-symbols-outlined">view_week</span>
+                  </div>
+                  <div class="stat-meta">
+                    <span class="stat-label">Total Weeks</span>
+                    <span class="stat-val" id="age-total-weeks">1,389</span>
+                  </div>
+                </div>
+
+                <!-- Total Months -->
+                <div class="stat-card">
+                  <div class="stat-icon-wrap amber">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                  </div>
+                  <div class="stat-meta">
+                    <span class="stat-label">Total Months</span>
+                    <span class="stat-val" id="age-total-months">319</span>
+                  </div>
+                </div>
+
+                <!-- Total Hours -->
+                <div class="stat-card">
+                  <div class="stat-icon-wrap purple">
+                    <span class="material-symbols-outlined">schedule</span>
+                  </div>
+                  <div class="stat-meta">
+                    <span class="stat-label">Total Hours</span>
+                    <span class="stat-val" id="age-total-hours">233,352</span>
+                  </div>
+                </div>
+
+                <!-- Total Minutes -->
+                <div class="stat-card">
+                  <div class="stat-icon-wrap green">
+                    <span class="material-symbols-outlined">timelapse</span>
+                  </div>
+                  <div class="stat-meta">
+                    <span class="stat-label">Total Minutes</span>
+                    <span class="stat-val" id="age-total-minutes">14,001,120</span>
+                  </div>
+                </div>
+
+                <!-- Estimated Heartbeats -->
+                <div class="stat-card">
+                  <div class="stat-icon-wrap amber">
+                    <span class="material-symbols-outlined">favorite</span>
+                  </div>
+                  <div class="stat-meta">
+                    <span class="stat-label">Estimated Heartbeats</span>
+                    <span class="stat-val" id="age-total-heartbeats">~1.1 Billion</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Footer -->
+      <footer class="top-bar" style="border-top: 1px solid var(--outline-variant); border-bottom: none; font-size: 0.85rem; color: var(--text-muted); margin-top: auto;">
+        <span>© 2026 OmniCalc Pro Suite • High Precision Utilities</span>
+        <div style="display: flex; gap: 1.25rem;">
+          <span>Vanilla JS & HTML5/CSS3</span>
+        </div>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Key Shortcuts Modal -->
+  <dialog id="shortcuts-modal" style="border: none; border-radius: var(--radius-xl); padding: 0; background: transparent; backdrop-filter: blur(8px);">
+    <div class="glass-card" style="max-width: 480px; width: 90vw; margin: auto; box-shadow: var(--shadow-lg);">
+      <div class="panel-header">
+        <h3 class="panel-title">
+          <span class="material-symbols-outlined text-primary">keyboard</span>
+          <span>Keyboard Shortcuts</span>
+        </h3>
+        <button class="icon-btn" onclick="document.getElementById('shortcuts-modal').close()" style="width: 32px; height: 32px;">
+          <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+        </button>
+      </div>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.9rem;">
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">0-9, ., +, -, *, /</kbd> <span>Number & Operator inputs</span></li>
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Enter or =</kbd> <span>Calculate result</span></li>
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Backspace</kbd> <span>Delete last character</span></li>
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Escape</kbd> <span>All Clear (AC)</span></li>
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">( and )</kbd> <span>Parentheses</span></li>
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">^</kbd> <span>Power function ($x^y$)</span></li>
+        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">!</kbd> <span>Factorial ($n!$)</span></li>
+      </ul>
+    </div>
+  </dialog>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
