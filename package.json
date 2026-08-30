@@ -5,8 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "serve . -p 3000",
-    "start": "serve . -p 3000",
-    "build": "echo 'Static build ready for Vercel'"
+    "start": "serve . -p 3000"
   },
   "keywords": [
     "scientific-calculator",
