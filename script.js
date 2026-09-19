@@ -45,10 +45,8 @@ const ThemeManager = {
     this.applyTheme(this.theme);
 
     const topToggle = document.getElementById('top-theme-toggle');
-    const sidebarToggle = document.getElementById('sidebar-theme-toggle');
 
     if (topToggle) topToggle.addEventListener('click', () => this.toggleTheme());
-    if (sidebarToggle) sidebarToggle.addEventListener('click', () => this.toggleTheme());
   },
 
   toggleTheme() {
@@ -61,23 +59,17 @@ const ThemeManager = {
     const html = document.documentElement;
     const topIcon = document.getElementById('top-theme-icon');
     const topLabel = document.getElementById('top-theme-label');
-    const sidebarIcon = document.getElementById('sidebar-theme-icon');
-    const sidebarText = document.getElementById('sidebar-theme-text');
 
     if (theme === 'dark') {
       html.classList.add('dark');
       html.classList.remove('light');
       if (topIcon) topIcon.textContent = 'light_mode';
       if (topLabel) topLabel.textContent = 'Light';
-      if (sidebarIcon) sidebarIcon.textContent = 'light_mode';
-      if (sidebarText) sidebarText.textContent = 'Light Mode';
     } else {
       html.classList.add('light');
       html.classList.remove('dark');
       if (topIcon) topIcon.textContent = 'dark_mode';
       if (topLabel) topLabel.textContent = 'Dark';
-      if (sidebarIcon) sidebarIcon.textContent = 'dark_mode';
-      if (sidebarText) sidebarText.textContent = 'Dark Mode';
     }
   }
 };
@@ -113,14 +105,10 @@ const NavigationManager = {
       backdrop.addEventListener('click', () => this.closeMobileMenu());
     }
 
-    // Key shortcuts modal
-    const shortcutsBtn = document.getElementById('sidebar-shortcuts-btn');
+    // Key shortcuts / Help modal
     const helpBtn = document.getElementById('help-modal-btn');
     const shortcutsModal = document.getElementById('shortcuts-modal');
 
-    if (shortcutsBtn && shortcutsModal) {
-      shortcutsBtn.addEventListener('click', () => shortcutsModal.showModal());
-    }
     if (helpBtn && shortcutsModal) {
       helpBtn.addEventListener('click', () => shortcutsModal.showModal());
     }

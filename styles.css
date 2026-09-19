@@ -190,7 +190,7 @@ a {
 
 /* Sidebar Navigation */
 .sidebar {
-  width: 280px;
+  width: 250px;
   background: var(--surface-container-low);
   border-right: 1px solid var(--outline-variant);
   display: flex;
@@ -200,20 +200,20 @@ a {
   bottom: 0;
   left: 0;
   z-index: 100;
-  padding: 1.5rem 1rem;
+  padding: 1.25rem 0.85rem;
   transition: transform var(--transition-normal), background-color var(--transition-normal);
 }
 
 .sidebar-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0 0.5rem 1.5rem 0.5rem;
+  gap: 0.65rem;
+  padding: 0 0.25rem 1.15rem 0.25rem;
 }
 
 .brand-icon {
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   background: linear-gradient(135deg, var(--primary), #818cf8);
   color: #ffffff;
   border-radius: var(--radius-md);
@@ -224,7 +224,7 @@ a {
 }
 
 .brand-title {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text-primary);
@@ -232,7 +232,7 @@ a {
 }
 
 .brand-subtitle {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -241,19 +241,19 @@ a {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.35rem;
   flex: 1;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .nav-item-btn {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 0.875rem;
-  padding: 0.75rem 1rem;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
   border-radius: var(--radius-md);
-  font-size: 0.925rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-secondary);
   transition: all var(--transition-fast);
@@ -273,7 +273,7 @@ a {
 }
 
 .nav-item-btn .nav-icon {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -286,26 +286,29 @@ a {
 .sidebar-footer {
   margin-top: auto;
   border-top: 1px solid var(--outline-variant);
-  padding-top: 1rem;
+  padding-top: 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0.35rem;
 }
 
 /* Main Content Area */
 .main-wrapper {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 250px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--bg-app);
   transition: margin-left var(--transition-normal);
+  overflow-x: hidden;
+  max-width: calc(100% - 250px);
+  width: 100%;
 }
 
 /* Top App Bar */
 .top-bar {
-  height: 64px;
+  height: 52px;
   background: var(--surface-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -316,18 +319,18 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.75rem;
+  padding: 0 1.25rem;
 }
 
 .top-bar-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .mobile-menu-btn {
   display: none;
-  padding: 0.5rem;
+  padding: 0.4rem;
   border-radius: var(--radius-sm);
   color: var(--text-secondary);
 }
@@ -337,7 +340,7 @@ a {
 }
 
 .current-tool-title {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--primary);
@@ -346,12 +349,12 @@ a {
 .top-bar-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .icon-btn {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
@@ -372,10 +375,10 @@ a {
 .theme-toggle-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.85rem;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-full);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
   background: var(--surface-container);
@@ -391,10 +394,12 @@ a {
 /* Content Canvas */
 .content-canvas {
   flex: 1;
-  padding: 1.75rem;
-  max-width: 1320px;
+  padding: 1rem 1.25rem;
+  max-width: 960px;
   width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .tool-panel {
@@ -428,6 +433,8 @@ a {
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .panel-header {
@@ -448,34 +455,31 @@ a {
 
 /* ---------------- Scientific Calculator ---------------- */
 .calc-layout {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-@media (max-width: 1024px) {
-  .calc-layout {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .calc-main-card {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
 }
 
 /* Calculator Screen Display */
 .calc-screen {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-lg);
-  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.85rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 140px;
+  min-height: 80px;
   position: relative;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
 }
@@ -489,13 +493,13 @@ a {
 .calc-mode-badges {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.75rem;
+  gap: 0.3rem;
+  font-size: 0.7rem;
   font-weight: 700;
 }
 
 .calc-badge {
-  padding: 0.2rem 0.55rem;
+  padding: 0.15rem 0.45rem;
   border-radius: var(--radius-sm);
   background: var(--surface-container-high);
   color: var(--text-muted);
@@ -509,11 +513,11 @@ a {
 }
 
 .calc-memory-indicator {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--secondary);
   background: var(--secondary-container);
-  padding: 0.2rem 0.5rem;
+  padding: 0.15rem 0.45rem;
   border-radius: var(--radius-sm);
   opacity: 0;
   transition: opacity var(--transition-fast);
@@ -525,10 +529,10 @@ a {
 
 .calc-screen-expression {
   font-family: var(--font-mono);
-  font-size: 1.05rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   text-align: right;
-  min-height: 1.6rem;
+  min-height: 1.15rem;
   overflow-x: auto;
   white-space: nowrap;
   word-break: break-all;
@@ -537,19 +541,19 @@ a {
 
 .calc-screen-live-preview {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   text-align: right;
-  min-height: 1.25rem;
+  min-height: 0.95rem;
 }
 
 .calc-screen-result {
   font-family: var(--font-mono);
-  font-size: 2.25rem;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
   font-weight: 700;
   color: var(--text-primary);
   text-align: right;
-  line-height: 1.2;
+  line-height: 1.15;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
@@ -557,20 +561,20 @@ a {
 
 .calc-screen-result.error-text {
   color: var(--error);
-  font-size: 1.35rem;
+  font-size: 1.15rem;
 }
 
 /* Calculator Grid */
 .calc-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
 .calc-btn {
-  height: 52px;
+  height: clamp(31px, 4.1vh, 39px);
   border-radius: var(--radius-md);
-  font-size: 1rem;
+  font-size: clamp(0.775rem, 0.92vw, 0.875rem);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -591,7 +595,7 @@ a {
   color: var(--text-primary);
   border-color: var(--outline-variant);
   font-family: var(--font-mono);
-  font-size: 1.15rem;
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
 }
 .calc-btn-num:hover {
   background: var(--surface-container-high);
@@ -601,7 +605,7 @@ a {
 .calc-btn-sci {
   background: var(--surface-container);
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: clamp(0.72rem, 0.88vw, 0.8rem);
 }
 .calc-btn-sci:hover {
   background: var(--surface-container-highest);
@@ -616,7 +620,7 @@ a {
 .calc-btn-op {
   background: var(--primary-light);
   color: var(--primary);
-  font-size: 1.15rem;
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
 }
 .calc-btn-op:hover {
   background: var(--primary);
@@ -626,7 +630,7 @@ a {
 .calc-btn-equal {
   background: var(--primary);
   color: var(--on-primary);
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
   box-shadow: 0 4px 12px var(--primary-glow);
 }
 .calc-btn-equal:hover {
@@ -636,7 +640,7 @@ a {
 .calc-btn-danger {
   background: var(--error-container);
   color: var(--on-error-container);
-  font-size: 0.95rem;
+  font-size: 0.825rem;
 }
 .calc-btn-danger:hover {
   background: var(--error);
@@ -646,7 +650,7 @@ a {
 .calc-btn-mem {
   background: var(--surface-container-low);
   color: var(--text-secondary);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
 }
 .calc-btn-mem:hover {
@@ -662,7 +666,8 @@ a {
 .calc-history-card {
   display: flex;
   flex-direction: column;
-  max-height: 560px;
+  padding: 0.85rem 1rem;
+  max-height: 480px;
 }
 
 .history-list {
@@ -670,16 +675,16 @@ a {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
   padding-right: 0.25rem;
-  min-height: 240px;
+  min-height: 160px;
 }
 
 .history-item {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-md);
-  padding: 0.75rem;
+  padding: 0.5rem 0.65rem;
   cursor: pointer;
   transition: all var(--transition-fast);
 }
@@ -692,15 +697,15 @@ a {
 
 .history-expr {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-size: 0.725rem;
   color: var(--text-muted);
   text-align: right;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.15rem;
 }
 
 .history-res {
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: 0.925rem;
   font-weight: 700;
   color: var(--text-primary);
   text-align: right;
@@ -711,34 +716,36 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 200px;
+  height: 140px;
   color: var(--text-muted);
-  gap: 0.5rem;
-  font-size: 0.9rem;
+  gap: 0.35rem;
+  font-size: 0.825rem;
 }
 
 /* ---------------- Unit Converters Hub ---------------- */
 .converter-categories {
   display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.75rem;
-  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.25rem;
+  width: 100%;
 }
 
 .cat-pill-btn {
-  padding: 0.55rem 1.15rem;
+  padding: 0.45rem 0.9rem;
   border-radius: var(--radius-full);
-  font-size: 0.875rem;
+  font-size: 0.825rem;
   font-weight: 600;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   background: var(--surface);
   color: var(--text-secondary);
   border: 1px solid var(--outline-variant);
   white-space: nowrap;
   transition: all var(--transition-fast);
+  cursor: pointer;
 }
 
 .cat-pill-btn:hover {
@@ -754,15 +761,12 @@ a {
 }
 
 .converter-grid {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 1.5rem;
-}
-
-@media (max-width: 1024px) {
-  .converter-grid {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .converter-card-main {
@@ -996,15 +1000,12 @@ a {
 
 /* ---------------- BMI Calculator ---------------- */
 .bmi-layout {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 1.5rem;
-}
-
-@media (max-width: 1024px) {
-  .bmi-layout {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .unit-switch-pill {
@@ -1038,10 +1039,10 @@ a {
 
 .bmi-form-group label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .input-with-affix {
@@ -1055,9 +1056,9 @@ a {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-md);
-  padding: 0.75rem 2.75rem 0.75rem 1rem;
+  padding: 0.65rem 2.5rem 0.65rem 0.85rem;
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   outline: none;
@@ -1072,9 +1073,9 @@ a {
 
 .input-affix {
   position: absolute;
-  right: 1rem;
+  right: 0.85rem;
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   pointer-events: none;
 }
@@ -1085,29 +1086,29 @@ a {
   align-items: center;
   text-align: center;
   justify-content: center;
-  min-height: 420px;
+  padding: 1.25rem 1rem;
   position: relative;
 }
 
 .bmi-score-number {
   font-family: var(--font-mono);
-  font-size: 5.5rem;
+  font-size: clamp(2.75rem, 6.5vw, 4.25rem);
   font-weight: 800;
   line-height: 1;
   color: var(--text-primary);
-  margin: 0.5rem 0;
+  margin: 0.35rem 0;
   letter-spacing: -0.04em;
 }
 
 .bmi-category-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 1.25rem;
+  gap: 0.4rem;
+  padding: 0.35rem 1rem;
   border-radius: var(--radius-full);
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   transition: all var(--transition-normal);
 }
 
@@ -1157,13 +1158,13 @@ html.dark .cat-obese {
 /* Visual Rainbow Gauge Bar */
 .bmi-gauge-wrapper {
   width: 100%;
-  max-width: 520px;
-  margin: 0 auto 1.5rem auto;
+  max-width: 480px;
+  margin: 0 auto 1.25rem auto;
   position: relative;
 }
 
 .bmi-rainbow-track {
-  height: 14px;
+  height: 12px;
   width: 100%;
   border-radius: var(--radius-full);
   background: linear-gradient(
@@ -1184,8 +1185,8 @@ html.dark .cat-obese {
 .bmi-pointer {
   position: absolute;
   top: -4px;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: var(--radius-full);
   background: var(--text-primary);
   border: 3px solid #ffffff;
@@ -1197,8 +1198,8 @@ html.dark .cat-obese {
 .bmi-scale-labels {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
+  margin-top: 0.4rem;
+  font-size: 0.725rem;
   font-weight: 600;
   color: var(--text-muted);
 }
@@ -1207,40 +1208,37 @@ html.dark .cat-obese {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-lg);
-  padding: 1rem 1.25rem;
+  padding: 0.75rem 1.15rem;
   width: 100%;
-  max-width: 520px;
+  max-width: 480px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 /* ---------------- Age Calculator ---------------- */
 .age-layout {
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 1.5rem;
-}
-
-@media (max-width: 1024px) {
-  .age-layout {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .age-inputs-card {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .date-picker-group label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .date-input-wrap {
@@ -1251,9 +1249,10 @@ html.dark .cat-obese {
 
 .date-input-wrap .material-symbols-outlined {
   position: absolute;
-  left: 0.875rem;
+  left: 0.85rem;
   color: var(--text-muted);
   pointer-events: none;
+  font-size: 20px;
 }
 
 .date-input-wrap input[type="date"] {
@@ -1261,9 +1260,9 @@ html.dark .cat-obese {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  padding: 0.65rem 0.85rem 0.65rem 2.6rem;
   font-family: var(--font-main);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
   outline: none;
@@ -1279,14 +1278,14 @@ html.dark .cat-obese {
 .btn-primary-action {
   background: var(--primary);
   color: var(--on-primary);
-  padding: 0.85rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   box-shadow: 0 4px 14px var(--primary-glow);
   transition: all var(--transition-fast);
 }
@@ -1304,7 +1303,7 @@ html.dark .cat-obese {
 .age-results-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .main-age-hero {
@@ -1312,24 +1311,24 @@ html.dark .cat-obese {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2.25rem 1.5rem;
+  padding: 1.5rem 1.25rem;
   text-align: center;
 }
 
 .age-hero-label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--primary);
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .age-digits-row {
   display: flex;
   align-items: baseline;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 0.85rem;
   flex-wrap: wrap;
 }
 
@@ -1341,21 +1340,21 @@ html.dark .cat-obese {
 
 .age-digit-num {
   font-family: var(--font-mono);
-  font-size: 4.25rem;
+  font-size: clamp(2.25rem, 5.5vw, 3.5rem);
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1;
 }
 
 .age-digit-unit {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-muted);
-  margin-top: 0.4rem;
+  margin-top: 0.3rem;
 }
 
 .age-comma {
-  font-size: 3rem;
+  font-size: 2.25rem;
   color: var(--outline);
   font-weight: 300;
 }
@@ -1363,18 +1362,18 @@ html.dark .cat-obese {
 /* Age Stats Bento Grid */
 .age-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
 }
 
 .stat-card {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   transition: all var(--transition-fast);
 }
 
@@ -1385,8 +1384,8 @@ html.dark .cat-obese {
 }
 
 .stat-icon-wrap {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -1421,14 +1420,14 @@ html.dark .stat-icon-wrap.purple {
 }
 
 .stat-label {
-  font-size: 0.775rem;
+  font-size: 0.725rem;
   color: var(--text-muted);
   font-weight: 500;
 }
 
 .stat-val {
   font-family: var(--font-mono);
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -1441,13 +1440,13 @@ html.dark .stat-icon-wrap.purple {
   background: var(--surface-container-low);
   border: 1px solid var(--outline-variant);
   border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
 }
 
 .bday-circle-wrap {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1483,16 +1482,84 @@ html.dark .stat-icon-wrap.purple {
 
 .bday-circle-days {
   font-family: var(--font-mono);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--text-primary);
   line-height: 1;
 }
 
 .bday-circle-label {
-  font-size: 0.65rem;
+  font-size: 0.625rem;
   font-weight: 600;
   color: var(--text-muted);
+}
+
+/* ---------------- Keyboard Shortcuts Modal Dialog ---------------- */
+dialog#shortcuts-modal {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: 90vw;
+  width: 480px;
+  color: var(--text-primary);
+  z-index: 1000;
+}
+
+dialog#shortcuts-modal::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.shortcuts-modal-card {
+  background: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  color: var(--text-primary);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.shortcuts-modal-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.shortcuts-modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+}
+
+.shortcuts-modal-row kbd {
+  background: var(--surface-container-high);
+  color: var(--primary);
+  font-weight: 700;
+  border: 1px solid var(--outline);
+  padding: 0.25rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+
+.shortcuts-modal-desc {
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: right;
+  font-size: 0.85rem;
 }
 
 /* ---------------- Toast Notification ---------------- */
@@ -1534,6 +1601,71 @@ html.dark .stat-icon-wrap.purple {
 }
 
 /* ---------------- Responsive Styles ---------------- */
+@media (max-height: 740px) {
+  .top-bar {
+    height: 46px;
+    padding: 0 1rem;
+  }
+  .content-canvas {
+    padding: 0.5rem 1rem;
+  }
+  .calc-main-card {
+    padding: 0.65rem 0.85rem;
+    gap: 0.45rem;
+  }
+  .calc-screen {
+    min-height: 70px;
+    padding: 0.35rem 0.65rem;
+  }
+  .calc-screen-result {
+    font-size: 1.35rem;
+  }
+  .calc-grid {
+    gap: 0.25rem;
+  }
+  .calc-btn {
+    height: clamp(28px, 3.8vh, 34px);
+    font-size: 0.75rem;
+  }
+  .calc-btn-num, .calc-btn-op {
+    font-size: 0.9rem;
+  }
+  .calc-history-card {
+    max-height: 390px;
+    padding: 0.65rem 0.85rem;
+  }
+  .history-list {
+    min-height: 120px;
+  }
+}
+
+@media (max-height: 600px) {
+  .top-bar {
+    height: 40px;
+  }
+  .content-canvas {
+    padding: 0.25rem 0.75rem;
+  }
+  .calc-main-card {
+    padding: 0.5rem 0.75rem;
+    gap: 0.35rem;
+  }
+  .calc-screen {
+    min-height: 60px;
+    padding: 0.25rem 0.5rem;
+  }
+  .calc-screen-result {
+    font-size: 1.2rem;
+  }
+  .calc-btn {
+    height: 26px;
+    font-size: 0.7rem;
+  }
+  .calc-btn-num, .calc-btn-op {
+    font-size: 0.825rem;
+  }
+}
+
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
@@ -1546,6 +1678,8 @@ html.dark .stat-icon-wrap.purple {
 
   .main-wrapper {
     margin-left: 0;
+    max-width: 100%;
+    width: 100%;
   }
 
   .mobile-menu-btn {
@@ -1553,11 +1687,44 @@ html.dark .stat-icon-wrap.purple {
   }
 
   .content-canvas {
-    padding: 1rem;
+    padding: 0.65rem;
+    max-width: 100%;
   }
 
   .top-bar {
-    padding: 0 1rem;
+    padding: 0 0.85rem;
+    height: 48px;
+  }
+
+  .calc-layout,
+  .converter-grid,
+  .bmi-layout,
+  .age-layout {
+    gap: 0.75rem;
+    max-width: 100%;
+  }
+
+  .conversion-box-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .calc-main-card {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .calc-grid {
+    gap: 0.25rem;
+  }
+
+  .calc-btn {
+    height: clamp(34px, 5.2vh, 42px);
+    font-size: 0.85rem;
+  }
+
+  .calc-btn-num, .calc-btn-op {
+    font-size: 1rem;
   }
 
   .age-digit-num {

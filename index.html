@@ -84,16 +84,6 @@
         </li>
       </ul>
 
-      <div class="sidebar-footer">
-        <button class="nav-item-btn" id="sidebar-theme-toggle">
-          <span class="material-symbols-outlined nav-icon" id="sidebar-theme-icon">dark_mode</span>
-          <span id="sidebar-theme-text">Dark Mode</span>
-        </button>
-        <button class="nav-item-btn" id="sidebar-shortcuts-btn">
-          <span class="material-symbols-outlined nav-icon">keyboard</span>
-          <span>Key Shortcuts</span>
-        </button>
-      </div>
     </aside>
 
     <!-- Main Wrapper -->
@@ -752,25 +742,25 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Key Shortcuts Modal -->
-  <dialog id="shortcuts-modal" style="border: none; border-radius: var(--radius-xl); padding: 0; background: transparent; backdrop-filter: blur(8px);">
-    <div class="glass-card" style="max-width: 480px; width: 90vw; margin: auto; box-shadow: var(--shadow-lg);">
-      <div class="panel-header">
+  <dialog id="shortcuts-modal">
+    <div class="shortcuts-modal-card">
+      <div class="panel-header" style="margin-bottom: 0.75rem;">
         <h3 class="panel-title">
           <span class="material-symbols-outlined text-primary">keyboard</span>
           <span>Keyboard Shortcuts</span>
         </h3>
-        <button class="icon-btn" onclick="document.getElementById('shortcuts-modal').close()" style="width: 32px; height: 32px;">
+        <button class="icon-btn" onclick="document.getElementById('shortcuts-modal').close()" style="width: 32px; height: 32px;" title="Close dialog">
           <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
         </button>
       </div>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.9rem;">
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">0-9, ., +, -, *, /</kbd> <span>Number & Operator inputs</span></li>
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Enter or =</kbd> <span>Calculate result</span></li>
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Backspace</kbd> <span>Delete last character</span></li>
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">Escape</kbd> <span>All Clear (AC)</span></li>
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">( and )</kbd> <span>Parentheses</span></li>
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">^</kbd> <span>Power function ($x^y$)</span></li>
-        <li style="display: flex; justify-content: space-between;"><kbd style="background: var(--surface-container); padding: 0.2rem 0.5rem; border-radius: 4px; font-family: var(--font-mono);">!</kbd> <span>Factorial ($n!$)</span></li>
+      <ul class="shortcuts-modal-list">
+        <li class="shortcuts-modal-row"><kbd>0-9, ., +, -, *, /</kbd> <span class="shortcuts-modal-desc">Numbers & Operators</span></li>
+        <li class="shortcuts-modal-row"><kbd>Enter or =</kbd> <span class="shortcuts-modal-desc">Calculate result</span></li>
+        <li class="shortcuts-modal-row"><kbd>Backspace</kbd> <span class="shortcuts-modal-desc">Delete last character</span></li>
+        <li class="shortcuts-modal-row"><kbd>Escape</kbd> <span class="shortcuts-modal-desc">All Clear (AC)</span></li>
+        <li class="shortcuts-modal-row"><kbd>( and )</kbd> <span class="shortcuts-modal-desc">Parentheses</span></li>
+        <li class="shortcuts-modal-row"><kbd>^</kbd> <span class="shortcuts-modal-desc">Power function (x^y)</span></li>
+        <li class="shortcuts-modal-row"><kbd>!</kbd> <span class="shortcuts-modal-desc">Factorial (n!)</span></li>
       </ul>
     </div>
   </dialog>
