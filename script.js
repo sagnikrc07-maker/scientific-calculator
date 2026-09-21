@@ -20,10 +20,17 @@ function showToast(message, icon = 'info') {
 
   const toast = document.createElement('div');
   toast.className = 'toast';
-  toast.innerHTML = `
-    <span class="material-symbols-outlined" style="font-size: 18px;">${icon}</span>
-    <span>${message}</span>
-  `;
+
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'material-symbols-outlined';
+  iconSpan.style.fontSize = '18px';
+  iconSpan.textContent = icon;
+
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = message;
+
+  toast.appendChild(iconSpan);
+  toast.appendChild(msgSpan);
 
   container.appendChild(toast);
 
@@ -430,77 +437,303 @@ const calcApp = {
     if (livePreview) livePreview.textContent = '';
   },
 
-  // High-precision mathematical parser & evaluator
-  parseAndEvaluate(rawExpr) {
-    if (!rawExpr || !rawExpr.trim()) return null;
-
-    let expr = rawExpr;
-
-    // Replace display operators with computational equivalents
-    expr = expr.replace(/×/g, '*')
-               .replace(/÷/g, '/')
-               .replace(/−/g, '-')
-               .replace(/mod/g, '%');
-
-    // Handle constants
-    expr = expr.replace(/π/g, 'Math.PI')
-               .replace(/(^|[^a-zA-Z0-9])e($|[^a-zA-Z0-9\+])/g, '$1Math.E$2');
-
-    // Handle Factorials: e.g. 5! or (2+3)!
-    const factorialRegex = /(\d+|\([^\(\)]+\))!/g;
-    while (factorialRegex.test(expr)) {
-      expr = expr.replace(factorialRegex, (match, p1) => `calcApp._fact(${p1})`);
-    }
-
-    // Handle Percentages: e.g. 50% -> (50/100)
-    expr = expr.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
-
-    // Handle Power operator: a^b -> Math.pow(a, b)
-    // Simple power replacement using JavaScript ** operator
-    expr = expr.replace(/\^/g, '**');
-
-    // Handle Scientific Functions with Degree / Radian consideration
-    const isDeg = this.isDegree;
-
-    // Trig wrappers
-    expr = expr.replace(/asin\(([^()]+)\)/g, isDeg ? '(Math.asin($1) * 180 / Math.PI)' : 'Math.asin($1)');
-    expr = expr.replace(/acos\(([^()]+)\)/g, isDeg ? '(Math.acos($1) * 180 / Math.PI)' : 'Math.acos($1)');
-    expr = expr.replace(/atan\(([^()]+)\)/g, isDeg ? '(Math.atan($1) * 180 / Math.PI)' : 'Math.atan($1)');
-    expr = expr.replace(/sin\(([^()]+)\)/g, isDeg ? 'Math.sin(($1) * Math.PI / 180)' : 'Math.sin($1)');
-    expr = expr.replace(/cos\(([^()]+)\)/g, isDeg ? 'Math.cos(($1) * Math.PI / 180)' : 'Math.cos($1)');
-    expr = expr.replace(/tan\(([^()]+)\)/g, isDeg ? 'Math.tan(($1) * Math.PI / 180)' : 'Math.tan($1)');
-
-    // Logarithms & Roots
-    expr = expr.replace(/ln\(/g, 'Math.log(');
-    expr = expr.replace(/log\(/g, 'Math.log10(');
-    expr = expr.replace(/sqrt\(/g, 'Math.sqrt(');
-    expr = expr.replace(/abs\(/g, 'Math.abs(');
-    expr = expr.replace(/exp\(/g, 'Math.exp(');
-    expr = expr.replace(/pow10\(([^()]+)\)/g, 'Math.pow(10, $1)');
-
-    // Safe mathematical evaluation using Function sandbox
-    const evalFn = new Function('calcApp', `
-      try {
-        const res = (${expr});
-        if (typeof res !== 'number' || isNaN(res)) return 'Error: Invalid input';
-        if (!isFinite(res)) return 'Error: Cannot divide by zero';
-        return res;
-      } catch (e) {
-        return null;
-      }
-    `);
-
-    return evalFn(this);
-  },
-
   _fact(n) {
     const num = Math.floor(Number(n));
-    if (num < 0) return NaN;
+    if (num < 0 || !Number.isFinite(num)) return NaN;
     if (num === 0 || num === 1) return 1;
     if (num > 170) return Infinity; // JS Number overflow limit
     let total = 1;
     for (let i = 2; i <= num; i++) total *= i;
     return total;
+  },
+
+  // Zero-Eval, CSP-compliant, high-precision mathematical tokenizer & recursive descent evaluator
+  parseAndEvaluate(rawExpr) {
+    if (!rawExpr || !rawExpr.trim()) return null;
+
+    let str = rawExpr
+      .replace(/×/g, '*')
+      .replace(/÷/g, '/')
+      .replace(/−/g, '-')
+      .replace(/\bmod\b/g, '%');
+
+    // Auto-close unclosed parentheses for enhanced calculator UX
+    let openCount = 0;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === '(') openCount++;
+      else if (str[i] === ')') openCount--;
+    }
+    while (openCount > 0) {
+      str += ')';
+      openCount--;
+    }
+
+    const len = str.length;
+    let pos = 0;
+
+    function isWhitespace(ch) {
+      return ch === ' ' || ch === '\t' || ch === '\n' || ch === '\r';
+    }
+    function isDigit(ch) {
+      return ch >= '0' && ch <= '9';
+    }
+    function isAlpha(ch) {
+      return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || ch === 'π';
+    }
+
+    function nextToken() {
+      while (pos < len && isWhitespace(str[pos])) pos++;
+      if (pos >= len) return { type: 'EOF' };
+
+      const ch = str[pos];
+
+      // Numbers: decimal, integer, scientific e-notation (e.g. 1e+5)
+      if (isDigit(ch) || (ch === '.' && pos + 1 < len && isDigit(str[pos + 1]))) {
+        let start = pos;
+        let hasDot = false;
+        if (str[pos] === '.') {
+          hasDot = true;
+          pos++;
+        }
+        while (pos < len && isDigit(str[pos])) pos++;
+        if (!hasDot && pos < len && str[pos] === '.') {
+          hasDot = true;
+          pos++;
+          while (pos < len && isDigit(str[pos])) pos++;
+        }
+        if (pos < len && (str[pos] === 'e' || str[pos] === 'E')) {
+          if (pos + 1 < len && (str[pos + 1] === '+' || str[pos + 1] === '-' || isDigit(str[pos + 1]))) {
+            pos++;
+            if (pos < len && (str[pos] === '+' || str[pos] === '-')) pos++;
+            while (pos < len && isDigit(str[pos])) pos++;
+          }
+        }
+        const numStr = str.slice(start, pos);
+        const val = Number(numStr);
+        if (isNaN(val)) throw new Error('Invalid number');
+        return { type: 'NUMBER', value: val };
+      }
+
+      // Operators and grouping symbols
+      if ('+-*/%^!()'.includes(ch)) {
+        pos++;
+        return { type: ch };
+      }
+
+      // Identifiers: functions and constants
+      if (isAlpha(ch)) {
+        let start = pos;
+        while (pos < len && (isAlpha(str[pos]) || isDigit(str[pos]))) pos++;
+        const id = str.slice(start, pos);
+        if (id === 'π' || id === 'pi') return { type: 'CONST', value: Math.PI };
+        if (id === 'e') return { type: 'CONST', value: Math.E };
+        return { type: 'IDENT', name: id.toLowerCase() };
+      }
+
+      throw new Error(`Unexpected character: ${ch}`);
+    }
+
+    const tokens = [];
+    while (true) {
+      const tok = nextToken();
+      tokens.push(tok);
+      if (tok.type === 'EOF') break;
+    }
+
+    // Insert implicit multiplication: e.g. 2π, 2(3), (2)(3), 5sin(30)
+    const expanded = [];
+    for (let i = 0; i < tokens.length; i++) {
+      const cur = tokens[i];
+      expanded.push(cur);
+      if (i + 1 < tokens.length) {
+        const next = tokens[i + 1];
+        const isCurOperand = cur.type === 'NUMBER' || cur.type === 'CONST' || cur.type === ')' || cur.type === '!';
+        const isNextStart = next.type === 'NUMBER' || next.type === 'CONST' || next.type === 'IDENT' || next.type === '(';
+        if (isCurOperand && isNextStart) {
+          expanded.push({ type: '*' });
+        }
+      }
+    }
+
+    let curIdx = 0;
+    function current() {
+      return expanded[curIdx];
+    }
+    function eat(expectedType) {
+      const tok = current();
+      if (expectedType && tok.type !== expectedType) {
+        throw new Error(`Expected '${expectedType}', got '${tok.type}'`);
+      }
+      curIdx++;
+      return tok;
+    }
+
+    const self = this;
+    const isDeg = this.isDegree;
+
+    function parseExpr() {
+      let val = parseTerm();
+      while (current().type === '+' || current().type === '-') {
+        const op = eat().type;
+        const right = parseTerm();
+        val = (op === '+') ? val + right : val - right;
+      }
+      return val;
+    }
+
+    function parseTerm() {
+      let val = parsePower();
+      while (current().type === '*' || current().type === '/' || current().type === '%') {
+        const op = eat().type;
+        const right = parsePower();
+        if (op === '*') {
+          val = val * right;
+        } else if (op === '/') {
+          if (right === 0) throw new Error('Cannot divide by zero');
+          val = val / right;
+        } else if (op === '%') {
+          if (right === 0) throw new Error('Cannot divide by zero');
+          val = val % right;
+        }
+      }
+      return val;
+    }
+
+    function parsePower() {
+      let base = parseUnary();
+      if (current().type === '^') {
+        eat('^');
+        const exp = parsePower(); // Right-associative
+        base = Math.pow(base, exp);
+      }
+      return base;
+    }
+
+    function parseUnary() {
+      if (current().type === '+') {
+        eat('+');
+        return parseUnary();
+      }
+      if (current().type === '-') {
+        eat('-');
+        return -parseUnary();
+      }
+      return parsePostfix();
+    }
+
+    function parsePostfix() {
+      let val = parsePrimary();
+      while (current().type === '!' || current().type === '%') {
+        const op = eat().type;
+        if (op === '!') {
+          val = self._fact(val);
+          if (isNaN(val)) throw new Error('Invalid input');
+        } else if (op === '%') {
+          val = val / 100;
+        }
+      }
+      return val;
+    }
+
+    function parsePrimary() {
+      const tok = current();
+
+      if (tok.type === 'NUMBER') {
+        eat();
+        return tok.value;
+      }
+      if (tok.type === 'CONST') {
+        eat();
+        return tok.value;
+      }
+      if (tok.type === '(') {
+        eat('(');
+        const val = parseExpr();
+        eat(')');
+        return val;
+      }
+      if (tok.type === 'IDENT') {
+        const fnName = tok.name;
+        eat('IDENT');
+        eat('(');
+        const arg = parseExpr();
+        eat(')');
+
+        switch (fnName) {
+          case 'sin': {
+            const rad = isDeg ? (arg * Math.PI / 180) : arg;
+            const res = Math.sin(rad);
+            return Math.abs(res) < 1e-15 ? 0 : res;
+          }
+          case 'cos': {
+            const rad = isDeg ? (arg * Math.PI / 180) : arg;
+            const res = Math.cos(rad);
+            return Math.abs(res) < 1e-15 ? 0 : res;
+          }
+          case 'tan': {
+            if (isDeg && Math.abs(arg % 180) === 90) {
+              throw new Error('Cannot divide by zero');
+            }
+            const rad = isDeg ? (arg * Math.PI / 180) : arg;
+            const res = Math.tan(rad);
+            return Math.abs(res) < 1e-15 ? 0 : res;
+          }
+          case 'asin': {
+            if (arg < -1 || arg > 1) throw new Error('Invalid input');
+            const res = Math.asin(arg);
+            return isDeg ? (res * 180 / Math.PI) : res;
+          }
+          case 'acos': {
+            if (arg < -1 || arg > 1) throw new Error('Invalid input');
+            const res = Math.acos(arg);
+            return isDeg ? (res * 180 / Math.PI) : res;
+          }
+          case 'atan': {
+            const res = Math.atan(arg);
+            return isDeg ? (res * 180 / Math.PI) : res;
+          }
+          case 'ln': {
+            if (arg <= 0) throw new Error('Invalid input');
+            return Math.log(arg);
+          }
+          case 'log': {
+            if (arg <= 0) throw new Error('Invalid input');
+            return Math.log10(arg);
+          }
+          case 'sqrt': {
+            if (arg < 0) throw new Error('Invalid input');
+            return Math.sqrt(arg);
+          }
+          case 'abs': {
+            return Math.abs(arg);
+          }
+          case 'exp': {
+            return Math.exp(arg);
+          }
+          case 'pow10': {
+            return Math.pow(10, arg);
+          }
+          default:
+            throw new Error(`Unknown function: ${fnName}`);
+        }
+      }
+
+      throw new Error(`Unexpected token '${tok.type}'`);
+    }
+
+    try {
+      const res = parseExpr();
+      if (current().type !== 'EOF') {
+        throw new Error('Unexpected trailing tokens');
+      }
+      if (typeof res !== 'number' || isNaN(res)) return 'Error: Invalid input';
+      if (!isFinite(res)) return 'Error: Cannot divide by zero';
+      return res;
+    } catch (e) {
+      if (e.message.includes('Cannot divide by zero')) return 'Error: Cannot divide by zero';
+      if (e.message.includes('Invalid input')) return 'Error: Invalid input';
+      return 'Error: Syntax error';
+    }
   },
 
   evaluateLivePreview() {
@@ -626,7 +859,14 @@ const calcApp = {
   loadHistory() {
     try {
       const saved = localStorage.getItem('omnicalc_calc_history');
-      if (saved) this.history = JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          this.history = parsed.filter(item => item && typeof item.expr === 'string' && typeof item.res === 'string');
+        } else {
+          this.history = [];
+        }
+      }
     } catch (e) {
       this.history = [];
     }
@@ -650,25 +890,45 @@ const calcApp = {
     const list = document.getElementById('calc-history-list');
     if (!list) return;
 
-    if (this.history.length === 0) {
-      list.innerHTML = `
-        <div class="empty-history">
-          <span class="material-symbols-outlined" style="font-size: 36px; opacity: 0.5;">history_edu</span>
-          <p>No calculations yet</p>
-        </div>
-      `;
+    list.replaceChildren();
+
+    if (!Array.isArray(this.history) || this.history.length === 0) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'empty-history';
+
+      const emptyIcon = document.createElement('span');
+      emptyIcon.className = 'material-symbols-outlined';
+      emptyIcon.style.fontSize = '36px';
+      emptyIcon.style.opacity = '0.5';
+      emptyIcon.textContent = 'history_edu';
+
+      const emptyP = document.createElement('p');
+      emptyP.textContent = 'No calculations yet';
+
+      emptyDiv.appendChild(emptyIcon);
+      emptyDiv.appendChild(emptyP);
+      list.appendChild(emptyDiv);
       return;
     }
 
-    list.innerHTML = '';
-    this.history.forEach((item, idx) => {
+    this.history.forEach((item) => {
+      if (!item || typeof item.expr !== 'string' || typeof item.res !== 'string') return;
+
       const el = document.createElement('div');
       el.className = 'history-item';
       el.title = 'Click to reload expression';
-      el.innerHTML = `
-        <div class="history-expr">${item.expr} =</div>
-        <div class="history-res">${item.res}</div>
-      `;
+
+      const exprDiv = document.createElement('div');
+      exprDiv.className = 'history-expr';
+      exprDiv.textContent = `${item.expr} =`;
+
+      const resDiv = document.createElement('div');
+      resDiv.className = 'history-res';
+      resDiv.textContent = item.res;
+
+      el.appendChild(exprDiv);
+      el.appendChild(resDiv);
+
       el.addEventListener('click', () => {
         this.expression = item.expr;
         this.result = item.res;
@@ -988,17 +1248,24 @@ const UnitEngine = {
   renderBenchmarks(benchmarks) {
     const list = document.getElementById('quick-ref-list');
     if (!list) return;
-    list.innerHTML = '';
+    list.replaceChildren();
 
     if (!benchmarks || benchmarks.length === 0) return;
 
     benchmarks.forEach(item => {
       const li = document.createElement('li');
       li.className = 'quick-ref-item';
-      li.innerHTML = `
-        <span style="color: var(--text-secondary);">${item.label}</span>
-        <span class="quick-ref-val">${item.val}</span>
-      `;
+
+      const labelSpan = document.createElement('span');
+      labelSpan.style.color = 'var(--text-secondary)';
+      labelSpan.textContent = item.label;
+
+      const valSpan = document.createElement('span');
+      valSpan.className = 'quick-ref-val';
+      valSpan.textContent = item.val;
+
+      li.appendChild(labelSpan);
+      li.appendChild(valSpan);
       list.appendChild(li);
     });
   },
@@ -1187,14 +1454,18 @@ const UnitEngine = {
     if (!refreshBtn) return;
 
     refreshBtn.addEventListener('click', async () => {
+      refreshBtn.disabled = true;
       refreshBtn.innerHTML = '<span class="material-symbols-outlined animate-spin" style="font-size: 16px;">sync</span> Fetching...';
       try {
-        const res = await fetch('https://open.er-api.com/v6/latest/USD');
+        const res = await fetch('https://open.er-api.com/v6/latest/USD', {
+          signal: AbortSignal.timeout(6000)
+        });
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         const data = await res.json();
         if (data && data.rates) {
           const currUnits = this.categories.currency.units;
           Object.keys(currUnits).forEach(c => {
-            if (data.rates[c]) {
+            if (typeof data.rates[c] === 'number' && data.rates[c] > 0) {
               // Rate is 1 USD = X Currency -> Factor is 1/X
               currUnits[c].factor = 1 / data.rates[c];
             }
@@ -1210,6 +1481,7 @@ const UnitEngine = {
       } catch (err) {
         showToast('Offline or API limit reached. Using standard baseline rates.', 'info');
       } finally {
+        refreshBtn.disabled = false;
         refreshBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size: 16px;">refresh</span> Refresh Live Rates';
       }
     });

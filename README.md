@@ -17,44 +17,21 @@ Built with **HTML5**, **CSS3 (Lumina & Lumina Noir design system)**, and modular
 
 ---
 
-## 🚀 Deploying to Vercel
+## 🚀 Deployment
 
-This repository is pre-configured and 100% ready for instant deployment on [Vercel](https://vercel.com).
+This web application is 100% static (HTML5, CSS3, Vanilla JS) and can be hosted on any static hosting service (such as GitHub Pages, Cloudflare Pages, Netlify, or Apache/Nginx).
 
-### Method 1: Deploy via GitHub (Recommended)
+### Deploying to GitHub Pages
 
-1. Push this project folder to your GitHub repository:
+1. Push your repository to GitHub:
    ```bash
-   git init
    git add .
-   git commit -m "Initial commit of OmniCalc Pro Suite"
-   git branch -M main
-   git remote add origin https://github.com/YOUR_USERNAME/omnicalc-pro.git
-   git push -u origin main
+   git commit -m "Deploy OmniCalc Pro Suite"
+   git push origin main
    ```
-2. Log in to [Vercel Dashboard](https://vercel.com/dashboard).
-3. Click **"Add New..."** → **"Project"**.
-4. Import your GitHub repository.
-5. Vercel will automatically detect the static configuration from `vercel.json` and `package.json`.
-6. Click **"Deploy"**. Your live URL will be ready in seconds!
-
----
-
-### Method 2: Deploy via Vercel CLI
-
-1. Install the Vercel CLI (if not already installed):
-   ```bash
-   npm i -g vercel
-   ```
-2. In this project directory, run:
-   ```bash
-   vercel
-   ```
-3. Follow the prompts in your terminal to log in and deploy.
-4. For production deployment:
-   ```bash
-   vercel --prod
-   ```
+2. In your GitHub repository, go to **Settings** → **Pages**.
+3. Under **Branch**, select `main` and `/ (root)`, then click **Save**.
+4. Your site will be live at `https://<username>.github.io/<repo-name>/`.
 
 ---
 
@@ -77,7 +54,6 @@ To run locally in your browser:
 ├── index.html        # Main HTML5 application
 ├── styles.css        # Lumina & Lumina Noir CSS design tokens & animations
 ├── script.js         # Core JavaScript application engine
-├── vercel.json       # Vercel deployment configuration & security headers
 ├── package.json      # Project metadata and dev scripts
 ├── favicon.svg       # Application vector icon
 ├── manifest.json     # PWA manifest for mobile / standalone support
