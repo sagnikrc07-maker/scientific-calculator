@@ -11,6 +11,15 @@
 
 'use strict';
 
+// Anti-Clickjacking Frame Buster
+if (window.top !== window.self) {
+  try {
+    window.top.location = window.self.location;
+  } catch (e) {
+    document.documentElement.style.display = 'none';
+  }
+}
+
 /* ==========================================================================
    1. TOAST NOTIFICATION UTILITY
    ========================================================================== */
@@ -179,6 +188,7 @@ const calcApp = {
   memory: 0,
   history: [],
   justCalculated: false,
+  MAX_EXPR_LEN: 300,
 
   init() {
     this.loadHistory();
@@ -250,6 +260,10 @@ const calcApp = {
     if (this.justCalculated) {
       this.expression = '';
       this.justCalculated = false;
+    }
+    if (this.expression.length >= this.MAX_EXPR_LEN) {
+      showToast('Maximum input length reached', 'warning');
+      return;
     }
     this.expression += digit;
     this.updateScreen();
@@ -362,11 +376,16 @@ const calcApp = {
   },
 
   insertReciprocal() {
-    if (this.justCalculated && this.result !== 'Error') {
-      this.expression = `1 / (${this.result})`;
-      this.justCalculated = false;
-      this.calculate();
-    } else if (this.expression) {
+    if (this.justCalculated && !this.result.startsWith('Error')) {
+      const num = parseFloat(this.result);
+      if (!isNaN(num) && isFinite(num)) {
+        this.expression = `1 / (${this.result})`;
+        this.justCalculated = false;
+        this.calculate();
+        return;
+      }
+    }
+    if (this.expression && !this.expression.startsWith('Error')) {
       this.expression = `1 / (${this.expression})`;
       this.updateScreen();
       this.evaluateLivePreview();
@@ -382,16 +401,19 @@ const calcApp = {
   },
 
   toggleSign() {
-    if (this.justCalculated && this.result !== 'Error') {
+    if (this.justCalculated && !this.result.startsWith('Error')) {
       const num = parseFloat(this.result);
-      this.expression = (-num).toString();
-      this.justCalculated = false;
-      this.updateScreen();
-      this.evaluateLivePreview();
-      return;
+      if (!isNaN(num) && isFinite(num)) {
+        this.expression = (-num).toString();
+        this.justCalculated = false;
+        this.updateScreen();
+        this.evaluateLivePreview();
+        return;
+      }
     }
-    if (!this.expression) {
+    if (!this.expression || this.expression.startsWith('Error')) {
       this.expression = '-';
+      this.justCalculated = false;
       this.updateScreen();
       return;
     }
@@ -727,11 +749,12 @@ const calcApp = {
         throw new Error('Unexpected trailing tokens');
       }
       if (typeof res !== 'number' || isNaN(res)) return 'Error: Invalid input';
-      if (!isFinite(res)) return 'Error: Cannot divide by zero';
+      if (!isFinite(res)) return 'Error: Overflow';
       return res;
     } catch (e) {
       if (e.message.includes('Cannot divide by zero')) return 'Error: Cannot divide by zero';
       if (e.message.includes('Invalid input')) return 'Error: Invalid input';
+      if (e.message.includes('Overflow')) return 'Error: Overflow';
       return 'Error: Syntax error';
     }
   },
@@ -812,7 +835,18 @@ const calcApp = {
   },
 
   memoryRecall() {
-    this.appendDigit(this.memory.toString());
+    if (this.justCalculated) {
+      this.expression = '';
+      this.justCalculated = false;
+    }
+    const memStr = this.memory < 0 ? `(${this.memory})` : this.memory.toString();
+    if (this.expression && /[0-9\)]$/.test(this.expression)) {
+      this.expression += ' × ' + memStr;
+    } else {
+      this.expression += memStr;
+    }
+    this.updateScreen();
+    this.evaluateLivePreview();
     showToast(`Memory Recalled: ${this.memory} (MR)`, 'memory');
   },
 
@@ -1384,67 +1418,64 @@ const UnitEngine = {
     const binInput = document.getElementById('numsys-bin');
     const octInput = document.getElementById('numsys-oct');
 
-    if (!decInput) return;
+    if (!decInput || !hexInput || !binInput || !octInput) return;
 
-    const updateAllFromDec = (decVal) => {
-      if (isNaN(decVal) || decVal < 0) {
-        hexInput.value = '';
-        binInput.value = '';
-        octInput.value = '';
-        return;
-      }
-      hexInput.value = decVal.toString(16).toUpperCase();
-      binInput.value = decVal.toString(2);
-      octInput.value = decVal.toString(8);
-
-      // Meta labels
-      const bits = decVal === 0 ? 1 : Math.floor(Math.log2(decVal)) + 1;
-      const bytes = Math.ceil(bits / 8);
+    const syncAll = (decVal, sourceInput) => {
       const binMeta = document.getElementById('numsys-bin-meta');
       const hexMeta = document.getElementById('numsys-hex-meta');
       const octMeta = document.getElementById('numsys-oct-meta');
 
+      if (isNaN(decVal) || decVal < 0) {
+        if (sourceInput !== decInput) decInput.value = '';
+        if (sourceInput !== hexInput) hexInput.value = '';
+        if (sourceInput !== binInput) binInput.value = '';
+        if (sourceInput !== octInput) octInput.value = '';
+
+        if (binMeta) binMeta.textContent = '0 bits (0 Bytes)';
+        if (hexMeta) hexMeta.textContent = '0x0';
+        if (octMeta) octMeta.textContent = '0o0';
+        return;
+      }
+
+      if (sourceInput !== decInput) decInput.value = decVal.toString(10);
+      if (sourceInput !== hexInput) hexInput.value = decVal.toString(16).toUpperCase();
+      if (sourceInput !== binInput) binInput.value = decVal.toString(2);
+      if (sourceInput !== octInput) octInput.value = decVal.toString(8);
+
+      const bits = decVal === 0 ? 1 : Math.floor(Math.log2(decVal)) + 1;
+      const bytes = Math.ceil(bits / 8);
+
       if (binMeta) binMeta.textContent = `${bits} bits (${bytes} ${bytes === 1 ? 'Byte' : 'Bytes'})`;
-      if (hexMeta) hexMeta.textContent = `0x${hexInput.value}`;
-      if (octMeta) octMeta.textContent = `0o${octInput.value}`;
+      if (hexMeta) hexMeta.textContent = `0x${decVal.toString(16).toUpperCase()}`;
+      if (octMeta) octMeta.textContent = `0o${decVal.toString(8)}`;
     };
 
     decInput.addEventListener('input', (e) => {
-      const val = parseInt(e.target.value.replace(/\D/g, ''), 10);
-      updateAllFromDec(val);
+      const cleanDec = e.target.value.replace(/\D/g, '');
+      e.target.value = cleanDec;
+      const val = cleanDec ? parseInt(cleanDec, 10) : NaN;
+      syncAll(val, decInput);
     });
 
     hexInput.addEventListener('input', (e) => {
-      const cleanHex = e.target.value.replace(/[^0-9a-fA-F]/g, '');
-      e.target.value = cleanHex.toUpperCase();
-      const val = parseInt(cleanHex, 16);
-      if (!isNaN(val)) {
-        decInput.value = val;
-        binInput.value = val.toString(2);
-        octInput.value = val.toString(8);
-      }
+      const cleanHex = e.target.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
+      e.target.value = cleanHex;
+      const val = cleanHex ? parseInt(cleanHex, 16) : NaN;
+      syncAll(val, hexInput);
     });
 
     binInput.addEventListener('input', (e) => {
       const cleanBin = e.target.value.replace(/[^01]/g, '');
       e.target.value = cleanBin;
-      const val = parseInt(cleanBin, 2);
-      if (!isNaN(val)) {
-        decInput.value = val;
-        hexInput.value = val.toString(16).toUpperCase();
-        octInput.value = val.toString(8);
-      }
+      const val = cleanBin ? parseInt(cleanBin, 2) : NaN;
+      syncAll(val, binInput);
     });
 
     octInput.addEventListener('input', (e) => {
       const cleanOct = e.target.value.replace(/[^0-7]/g, '');
       e.target.value = cleanOct;
-      const val = parseInt(cleanOct, 8);
-      if (!isNaN(val)) {
-        decInput.value = val;
-        hexInput.value = val.toString(16).toUpperCase();
-        binInput.value = val.toString(2);
-      }
+      const val = cleanOct ? parseInt(cleanOct, 8) : NaN;
+      syncAll(val, octInput);
     });
   },
 
