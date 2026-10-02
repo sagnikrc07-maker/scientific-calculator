@@ -15,39 +15,6 @@ Built with **HTML5**, **CSS3 (Lumina & Lumina Noir design system)**, and modular
 - **Dual Themes:** Clean Light Mode and Deep Charcoal Dark Mode with localStorage preference memory.
 - **Full Responsiveness:** Optimized for Mobile, Tablet, and Desktop.
 
----
-
-## 🚀 Deployment
-
-This web application is 100% static (HTML5, CSS3, Vanilla JS) and can be hosted on any static hosting service (such as GitHub Pages, Cloudflare Pages, Netlify, or Apache/Nginx).
-
-### Deploying to GitHub Pages
-
-1. Push your repository to GitHub:
-   ```bash
-   git add .
-   git commit -m "Deploy OmniCalc Pro Suite"
-   git push origin main
-   ```
-2. In your GitHub repository, go to **Settings** → **Pages**.
-3. Under **Branch**, select `main` and `/ (root)`, then click **Save**.
-4. Your site will be live at `https://<username>.github.io/<repo-name>/`.
-
----
-
-## 💻 Local Development
-
-To run locally in your browser:
-- Simply open `index.html` in any modern web browser.
-- Or use any static dev server:
-  ```bash
-  npx serve .
-  # or
-  python -m http.server 3000
-  ```
-
----
-
 ## 📁 Project Structure
 
 ```
