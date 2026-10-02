@@ -15,6 +15,8 @@ Built with **HTML5**, **CSS3 (Lumina & Lumina Noir design system)**, and modular
 - **Dual Themes:** Clean Light Mode and Deep Charcoal Dark Mode with localStorage preference memory.
 - **Full Responsiveness:** Optimized for Mobile, Tablet, and Desktop.
 
+---
+
 ## 📁 Project Structure
 
 ```
